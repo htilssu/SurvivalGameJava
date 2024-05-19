@@ -32,7 +32,7 @@ public class GameSplashScreen extends JPanel {
         drawLoadingProgress((Graphics2D) g, progress % 101);
         if (progress == 100) {
             this.setVisible(false);
-            gameWindow.joinGame();
+            gameWindow.joinMain();
         }
     }
 

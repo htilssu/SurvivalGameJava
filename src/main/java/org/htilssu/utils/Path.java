@@ -10,6 +10,7 @@ public final class Path {
 
     /**
      * Return an {@link String} object that the absolute path of resource
+     *
      * @return an {@link String} url
      */
     public static String getResourcePath() {

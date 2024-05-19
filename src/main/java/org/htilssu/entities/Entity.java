@@ -1,9 +1,8 @@
 package org.htilssu.entities;
 
-import java.util.LinkedList;
+import java.awt.*;
 
-public class Entity extends AssetEntity {
-    private static final LinkedList<Entity> entities = new LinkedList<>();
+public abstract class Entity extends AssetEntity {
     public double X;
     public double Y;
     /**
@@ -19,13 +18,34 @@ public class Entity extends AssetEntity {
     public double maxHealth;
 
     Entity() {
-        entities.add(this);
+        EntityManager.addEntity(this);
     }
 
-    public static LinkedList<Entity> getAllEntities() {
-        return entities;
+    public Entity(double x, double y, double damage, EntityType type, double speed, double maxHealth) {
+        X = x;
+        Y = y;
+        this.damage = damage;
+        this.type = type;
+        this.speed = speed;
+        this.maxHealth = maxHealth;
+        this.currentHealth = maxHealth;
+        EntityManager.addEntity(this);
     }
 
-    public void update() {
+    /**
+     * Update các thông tin của entity dựa vào TPS
+     */
+    public abstract void update();
+
+
+    /**
+     * Render entity lên màn hình
+     *
+     * @param g đối tượng {@link Graphics} để vẽ
+     */
+    public abstract void render(Graphics g);
+
+    public void remove() {
+        EntityManager.removeEntity(this);
     }
 }

@@ -1,26 +1,38 @@
 package org.htilssu;
 
+import org.htilssu.entities.Camera;
+import org.htilssu.entities.EntityManager;
+import org.htilssu.entities.EntityType;
 import org.htilssu.entities.Player;
-import org.htilssu.inputs.KeyInput;
-import org.htilssu.utils.Image;
+import org.htilssu.entities.states.PlayerState;
+import org.htilssu.inputs.KeyInputListener;
+import org.htilssu.utils.Assets;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
-public class GamePanel extends JPanel {
-    private final Player player = new Player("knight_idle.png");
-    public float x = 0;
-    public float y = 0;
-    public int step = 100;
+import static org.htilssu.controls.GameSetting.SCALE;
+
+public class GamePanel extends JPanel implements FocusListener, ComponentListener {
+    private final Player player = new Player(0, 0, 10, EntityType.Player, 1, 20, PlayerState.IDLE, "htilssu", 100, 1);
+    private final Camera camera = new Camera(player);
     GameWindow window;
-    Font font = new Font("Arial", Font.PLAIN, 16);
+
+    {
+        player.loadAsset("knight_idle.png");
+    }
 
     public GamePanel(GameWindow window) {
         this.window = window;
-        addKeyListener(new KeyInput(player, window));
+        addKeyListener(new KeyInputListener(this));
         setFocusable(true);
         setPreferredSize(window.getSize());
+        addFocusListener(this);
+        addComponentListener(this);
     }
 
     public Player getPlayer() {
@@ -30,11 +42,42 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        player.update();
         Graphics2D g2d = (Graphics2D) g;
-        g.setColor(Color.BLACK);
-        g.setFont(font);
-        AffineTransform at = AffineTransform.getTranslateInstance(player.X, player.Y);
-        g2d.drawImage(Image.resizeImage(player.getSubAsset(), player.getSubAsset().getWidth() * 2, player.getSubAsset().getHeight() * 2), at, null);
+        g2d.scale(SCALE, SCALE);
+        EntityManager.render(g2d);
+    }
+
+    public GameWindow getWindow() {
+        return window;
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        requestFocus();
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        player.resetMoveState();
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+
     }
 }
